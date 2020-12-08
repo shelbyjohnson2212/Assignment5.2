@@ -1,4 +1,5 @@
-ackage com.meritamerica.assignment4;
+package com.meritamerica.assignment5.model;
+
 
 // Using DecimalFormat Class, one can format a value into specific pattern using its format() method
 import java.text.DecimalFormat;

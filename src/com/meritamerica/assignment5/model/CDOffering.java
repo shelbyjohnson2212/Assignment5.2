@@ -1,12 +1,12 @@
-package com.meritamerica.assignment4;
+package com.meritamerica.assignment5.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Min;
 
 // This CDoffering class gets the term and interest rate by two getter methods
 public class CDOffering {
 	@NotNull
-	@Positive
+	@Min(value = 1, message = " term must be >=1")
 	private int term;
 	@NotNull
 	private double interestRate;

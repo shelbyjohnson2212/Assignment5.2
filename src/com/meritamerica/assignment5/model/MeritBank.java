@@ -1,4 +1,4 @@
-package com.meritamerica.assignment4;
+package com.meritamerica.assignment5.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +9,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import com.meritamerica.exceptions.*;
+
+import com.meritamerica.assignment5.exceptions.ExceedsAvailableBalanceException;
+import com.meritamerica.assignment5.exceptions.ExceedsFraudSuspicionLimitException;
+import com.meritamerica.assignment5.exceptions.NegativeAmountException;
+
 
 public class MeritBank {
 	private static long accIndex = 0;

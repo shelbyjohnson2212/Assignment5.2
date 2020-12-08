@@ -1,4 +1,4 @@
-package src;
+package com.meritamerica.assignment5.model;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,24 +1,24 @@
-package com.meritamerica.assignment4;
+package com.meritamerica.assignment5.model;
 
 import java.util.Arrays;
 import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.meritamerica.assignment5.exceptions.*;
+
+
 // Declare a class that implements an interface 
 public class AccountHolder implements Comparable{ 
-		private static long ID = 1;
-		
+		private static long ID = 1;	
 		private long id;
 	    // Class member variables 
 		@NotNull(message="First name can not be Null")
-		@NotBlank(message="First name must not be empty")
 	 	private String firstName;
 		private String middleName;
 	    @NotNull(message="Last name can not be Null")
-	    @NotBlank(message="Last name must not be empty")
 	    private String lastName;
 	    @NotNull
 	    @Size(min=9, message="SNN can not be less than 9 characters")
@@ -69,8 +69,8 @@ public class AccountHolder implements Comparable{
 	    	this.savingsAccounts = new SavingsAccount[numOfAccount];
 	    }
 	    
-	    public void createCDAccounts(int numOfAccount) {
-	    	this.CDAccounts = new CDAccount[numOfAccount];
+	   public void createCDAccounts(int numOfAccount) {
+	   	this.CDAccounts = new CDAccount[numOfAccount];
 	    }
 	    
 	   
@@ -186,11 +186,11 @@ public class AccountHolder implements Comparable{
 	    
 	    // Should also add a deposit transaction with the opening balance
 	    public CDAccount addCDAccount(CDOffering offering, double openingBalance) throws ExceedsFraudSuspicionLimitException{   	
-	    	CDAccount acc = new CDAccount(offering, openingBalance);
+	   	CDAccount acc = new CDAccount(offering, openingBalance);
 	    	
 	    	return this.addCDAccount(acc);
 	    	
-	    }
+	   }
 	    
 	    //Should also add a deposit transaction with the opening balance
 	    public CDAccount addCDAccount(CDAccount cdAccount) throws ExceedsFraudSuspicionLimitException {
@@ -231,8 +231,10 @@ public class AccountHolder implements Comparable{
 	    }
 	    
 	    public double getCombinedBalance() {
-	    	return this.getCDBalance() + this.getCheckingBalance() + this.getSavingsBalance();
+	    	//return this.getCDBalance() + this.getCheckingBalance() + this.getSavingsBalance();
+	    	return this.getCheckingBalance() + this.getSavingsBalance();
 	    }
+	    
 	    
 	    // This method validates that the total amount of combined balance and deposit is less than $250,000.00
 	    private boolean canOpen(double deposit) throws ExceedsCombinedBalanceLimitException {

@@ -1,150 +1,93 @@
-ackage com.meritamerica.assignment4;
+package com.meritamerica.assignment5.model;
 
-// Using DecimalFormat Class, one can format a value into specific pattern using its format() method
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(value = { "transactions" })
-public class BankAccount {
-	
-	// member variables of BankAccount class
-	protected long accountNumber;
-	private double balance;
-	@NotNull
-	private double interestRate;
-	private Date openDate;
-	private List<Transaction> transactions;
-	
-	// independent constructor
-	public BankAccount() {
-		this.transactions = new ArrayList<>();
-		this.openDate = new Date();
-		this.accountNumber = MeritBank.getNextAccountNumber();
+public class CDAccount extends BankAccount{
+	/**
+	 * Instance Variables 
+	 */
+	CDOffering offerings;
+	int term;
+	public CDAccount() {
+		super();
 	}
-	
-	BankAccount(double balance, double interestRate) {
-		this(MeritBank.getNextAccountNumber(), balance, interestRate, new Date());
+	public void setTerm(int term) {
+		this.term = term;
 	}
-	
-	BankAccount(double balance, double interestRate, Date accountOpenedOn) {
-		this(MeritBank.getNextAccountNumber(), balance, interestRate, accountOpenedOn);
+	/**
+	 * Constructor for CD Account
+	 * @param offering
+	 * @param openingBalance
+	 */
+	public CDAccount(CDOffering offering, double openingBalance){
+		super(openingBalance, offering.getInterestRate());
+		this.offerings = offering;
+		this.term = offering.getTerm();
 	}
-	
-	BankAccount(long accountNumber, double balance, double interestRate, Date accountOpenedOn) {
-		// assume that we don't have to check if the account number that is passed in the parameter is valid (unique)
-		this.accountNumber = accountNumber;
-		this.balance = balance;
-		this.interestRate = interestRate;
-		this.openDate = accountOpenedOn;
-		
-		transactions = new ArrayList<>();
+	/**
+	 * 
+	 * @param accountNumber
+	 * @param balance
+	 * @param interestRate
+	 * @param openedOn
+	 * @param term
+	 */
+	public CDAccount(Long accountNumber, Double balance,
+			Double interestRate, Date openedOn, int term) {
+			super(accountNumber, balance, interestRate, openedOn);
+			this.term = term;
 	}
-	
-	// don't know the purpose of using BankAccount static readFromString
-	public static BankAccount readFromString(String accountData) throws ParseException {
-		String[] data = accountData.split(",");
-		
-		// Create a date formatter
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		int accNumb = Integer.parseInt(data[0]);
-		double balance = Double.parseDouble(data[1]);
-		double interestRate = Double.parseDouble(data[2]);
-		Date openDate = formatter.parse(data[3]);	// parse the date into date object
-	    
-	    return new BankAccount(accNumb, balance, interestRate, openDate);
+	/**
+	 * Passing the account data through a string and reading the String information
+	 * Creating a new date formatter 
+	 * @param accountData
+	 * @return
+	 * @throws ParseException
+	 */
+	public static CDAccount readFromString(String accountData) throws ParseException{
+		try {
+			String[] temp = accountData.split(",");
+			Date date = new SimpleDateFormat("dd/MM/yyyy").parse(temp[3]);
+			CDAccount newAccount =  new CDAccount(Long.valueOf(temp[0]), Double.valueOf(temp[1]),Double.valueOf(temp[2]), date, Integer.valueOf(temp[4]));
+			return newAccount;
+		}
+		catch(Exception exception) {
+			throw new NumberFormatException();
+		}
 	}
-	
-	public String writeToString() {
-		DecimalFormat df = new DecimalFormat("#.####");
-		String data = this.getAccountNumber() + "," + df.format(this.getBalance()) + "," 
-				+ df.format(this.getInterestRate()) + "," + MeritBank.formatDate(this.getOpenedOn());
-		return data;
+	/**
+	 * Getter for instance variable term	
+	 * @return return term
+	 */
+	public int getTerm() {
+		return term;
 	}
-	
+	/**
+	 * Override withdraw/deposit because bank doesn't allow it.
+	 */
+	@Override
 	public boolean withdraw(double amount) {
-		if (amount <= 0) {
-			System.out.println("The amount needs to be more than 0");
-			return false;
-		} else if (amount > this.balance) {
-			System.out.println("The amount need to be smaller or equal to the balance");
-			return false;
-		} else {
-			this.balance -= amount;
-			return true;
-		}
+		return false;
 	}
 	
+	@Override
 	public boolean deposit(double amount) {
-		if (amount <= 0) {
-			System.out.println("The deposit amount needs to be larger than 0");
-			return false;
-		} else {
-			this.balance += amount;
-			return true;
-		}
+		return false;
+	}
+	/**
+	 * Write information of CD account and return and a String 
+	 */
+	public String writeToString() {
+		StringBuilder toString = new StringBuilder();
+		toString.append(super.writeToString()).append(",");
+		toString.append(term);
+		return toString.toString();
 	}
 	
-	public double futureValue(int years) {
-		double futureVal = this.balance * Math.pow(1 + getInterestRate(), years);
-		
-		return futureVal;
-	}
-	
-	public void addTransaction(Transaction tran){
-		System.out.println("Transaction thing");
-		System.out.println(tran);
-		transactions.add(tran);
-	}
-	
-	public List<Transaction> getTransactions() {
-		return this.transactions;
-	}
-	
-	
-
-	public long getAccountNumber() {
-		return this.accountNumber;
-	}
-	
-	public double getBalance() {
-		return this.balance;
-	}
-	
-	public double getInterestRate() {
-		return this.interestRate;
-	}
-	
-	public Date getOpenedOn() {
-		return this.openDate;
-	}
-	
-	public void setBalance(double balance){
-		this.balance = balance;
+	public double futureValue() {	
+		return futureValue(term);
 	}
 
-	public Date getOpenDate() {
-		return openDate;
-	}
-
-	public void setOpenDate(Date openDate) {
-		this.openDate = openDate;
-	}
-
-	public void setAccountNumber(long accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-
-	public void setInterestRate(double interestRate) {
-		this.interestRate = interestRate;
-	}
-	
-	
 }
