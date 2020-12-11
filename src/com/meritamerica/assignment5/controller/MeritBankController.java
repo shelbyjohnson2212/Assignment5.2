@@ -2,7 +2,9 @@ package com.meritamerica.assignment5.controller;
 
 import javax.validation.Valid;
 import com.meritamerica.assignment5.*;
-import com.meritamerica.assignment5.model.AccountHolder;
+import com.meritamerica.assignment5.exceptions.*;
+import com.meritamerica.assignment5.model.*;
+//import com.meritamerica.assignment5.model.MeritBank;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.meritamerica.exceptions.*;
 
 @RestController
 public class MeritBankController {
 	
 	Logger logger = LoggerFactory.getLogger(MeritBankController.class);
 	
-	@RequestMapping("/")
+	@RequestMapping("/") //This is an "annotation".
 	@ResponseBody
 	public String home() {
 		return "Hi";
